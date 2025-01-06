@@ -11,7 +11,7 @@ export const DATA = {
     " Motivated to be a Full Stack Web Developer with skills in HTML, CSS, JavaScript, React, Node.js, and database",
   summary:
     " I am highly motivated to learn and grow. I have developed a strong foundation in HTML, CSS and JS during my studies, which I believe will help me contribute meaningfully to your team.",
-  avatarUrl: "/me.jpg",
+  avatarUrl: "/me1.jpg",
   skills: [
     "HTML",
     "CSS",
@@ -107,7 +107,7 @@ export const DATA = {
       school: "Bhaktapur Multiple Campus",
       href: "https://bkmc.tu.edu.np",
       degree: "Bachelor's Degree of Computer Application (BCA)",
-      logoUrl: "/college.png",
+      logoUrl: "/colz.jpg",
       start: "2021",
       end: "Current",
     },
@@ -141,10 +141,10 @@ export const DATA = {
         //   icon: <Icons.globe className="size-3" />,
         // },
       ],
-      image: "",
+      image: "nep.jpg",
       video:
-        "https://pub-83c5db439b40468498f97946200806f7.r2.dev/chat-collect.mp4",
-    },
+       // "https://pub-83c5db439b40468498f97946200806f7.r2.dev/chat-collect.mp4",
+     },
   
   ]
 } as const;
