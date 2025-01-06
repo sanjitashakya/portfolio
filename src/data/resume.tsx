@@ -11,7 +11,7 @@ export const DATA = {
     " Motivated to be a Full Stack Web Developer with skills in HTML, CSS, JavaScript, React, Node.js, and database",
   summary:
     " I am highly motivated to learn and grow. I have developed a strong foundation in HTML, CSS and JS during my studies, which I believe will help me contribute meaningfully to your team.",
-  avatarUrl: "/me1.jpg",
+  avatarUrl: "/me2.jpg",
   skills: [
     "HTML",
     "CSS",
