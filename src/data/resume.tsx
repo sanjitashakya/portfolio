@@ -99,7 +99,7 @@ export const DATA = {
       school: "Shree Padma Secondary School",
       href: "#",
       degree: "Humanities",
-      logoUrl: "/colzlogo",
+      logoUrl: "/colzlogo.png",
       start: "2018",
       end: "2020",
     },
