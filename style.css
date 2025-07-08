@@ -529,6 +529,10 @@ body {
     margin-bottom: 1rem;
 }
 
+.email{
+    text-decoration: none;
+}
+
 .social-link {
     display: flex;
     align-items: center;
