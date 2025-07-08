@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+    </div>
+
+    <div class="site-container">
+      <header class="header" id="header">
+        <nav class="nav">
+          <a href="#" class="logo">Sanjita</a>
+          <ul class="nav-links" id="navLinks">
+            <li><a href="#hero" class="nav-link active">Home</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#skills" class="nav-link">Skills</a></li>
+            <li><a href="#projects" class="nav-link">Projects</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li>
+              <button class="theme-toggle" id="themeToggle">
+                <span id="themeIcon">🌙</span>
+              </button>
+            </li>
+          </ul>
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        </nav>
+      </header>
+      <section class="hero" id="hero">
+        <canvas class="hero-canvas" id="heroCanvas"></canvas>
+        <div class="hero-content">
+          <h1 class="hero-title">Sanjita Shakya</h1>
+          <p class="hero-subtitle">
+            Aspiring Software Developer & UI/UX Enthusiast
+          </p>
+          <div class="hero-cta">
+            <a href="#projects" class="btn btn-primary">View My Work</a>
+            <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="about section" id="about">
+        <div class="fade-in">
+          <h2 class="section-title">About Me</h2>
+          <div class="about-content">
+            <div class="about-image">
+              <div class="about-image">
+                <img src="mypic.jpg" alt="About Image" />
+              </div>
+            </div>
+            <div class="about-text">
+              <p>
+                Hi! I'm Sanjita, a motivated and enthusiastic learner on my
+                journey to become a skilled software developer. I’m passionate
+                about building clean, user-friendly web applications and
+                constantly learning new technologies.
+              </p>
+              <p>
+                I enjoy solving problems through code and creating experiences
+                that are both functional and beautiful. I’m especially
+                interested in frontend development, design systems, and user
+                experience.
+              </p>
+              <p>
+                I'm currently seeking opportunities to grow, collaborate, and
+                contribute to impactful projects that make a difference.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="skills section" id="skills">
+        <div class="fade-in">
+          <h2 class="section-title">Skills & Technologies</h2>
+          <div class="skills-container">
+            <div class="skill-category">
+              <h3>Frontend</h3>
+              <div class="skill-list">
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">React</span>
+                <span class="skill-tag">HTML5</span>
+                <span class="skill-tag">CSS3</span>
+                <span class="skill-tag">Tailwind CSS</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <h3>Backend</h3>
+              <div class="skill-list">
+                <span class="skill-tag">Node.js</span>
+                <span class="skill-tag">MongoDB</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <h3>Tools</h3>
+              <div class="skill-list">
+                <span class="skill-tag">Git</span>
+                <span class="skill-tag">Figma</span>
+                <span class="skill-tag">Linux</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="projects section" id="projects">
+        <div class="fade-in">
+          <h2 class="section-title">Featured Project</h2>
+          <div class="projects-grid">
+            <div class="project-card">
+              <div class="project-image">🚀</div>
+              <div class="project-content">
+                <h3 class="project-title">E-Commerce Platform</h3>
+                <p class="project-description">
+                  A simple e-commerce website with cart functionality, product
+                  listings, and responsive design.
+                </p>
+                <div class="project-tech">
+                  <span class="tech-tag">React</span>
+                  <span class="tech-tag">Node.js</span>
+                  <span class="tech-tag">MongoDB</span>
+                </div>
+                <div class="project-links">
+                  <a href="#" class="project-link">GitHub →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact section" id="contact">
+        <div class="fade-in">
+          <h2 class="section-title">Get In Touch</h2>
+          <div class="contact-content">
+            <div class="contact-info">
+              <div class="contact-item">
+                <div class="contact-icon">📧</div>
+                <div>
+                  <h4>Email</h4>
+                  <p>sanjitashakya@gmail.com</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-icon">📱</div>
+                <div>
+                  <h4>Phone</h4>
+                  <p>9863687370</p>
+                </div>
+              </div>
+              <div class="contact-item" id="locationItem">
+                <div class="contact-icon">📍</div>
+                <div>
+                  <h4>Location</h4>
+                  <p id="locationText">Loading location...</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-icon">💼</div>
+                <div>
+                  <h4>LinkedIn</h4>
+                  <p>@Sanjita</p>
+                </div>
+              </div>
+            </div>
+            <form class="contact-form" id="contactForm">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required />
+              </div>
+              <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject" required />
+              </div>
+              <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer-content">
+          <div class="social-links">
+            <a href="#" class="social-link">💼</a>
+            <a href="#" class="social-link">🐙</a>
+            <a href="#" class="social-link">🐦</a>
+            <a href="#" class="social-link">📧</a>
+          </div>
+          <p>&copy; 2025 Sanjita Shakya. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
