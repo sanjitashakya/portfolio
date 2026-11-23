@@ -1,37 +1,63 @@
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('data:text/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgKGUpID0+IHsgY29uc29sZS5sb2coJ1NlcnZpY2UgV29ya2VyIGluc3RhbGxlZCcpOyB9KTsgc2VsZi5hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIChlKSA9PiB7IGUucmVzcG9uZFdpdGgoZmV0Y2goZS5yZXF1ZXN0KS5jYXRjaCgoKSA9PiBuZXcgUmVzcG9uc2UoJ09mZmxpbmUnKSkpOyB9KTs=')
-            .then(() => console.log('Service Worker registered'))
-            .catch(err => console.log('Service Worker registration failed'));
-    });
-}
+// ===== Settings =====
+// Contact form messages are delivered to this inbox by FormSubmit (formsubmit.co).
+// The very first message sends an activation email to this address. Click
+// "Activate Form" in that email once, and every message after that arrives normally.
+const CONTACT_EMAIL = 'sanjitashakya1@gmail.com';
+const FORM_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
+
+// Safe wrappers: localStorage can throw in private mode or some browsers.
+const storage = {
+    get(key) {
+        try { return localStorage.getItem(key); } catch { return null; }
+    },
+    set(key, value) {
+        try { localStorage.setItem(key, value); } catch { /* ignore */ }
+    }
+};
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ===== Light / dark theme =====
 class ThemeManager {
     constructor() {
-        this.theme = localStorage.getItem('theme') || 'light';
-        this.init();
-    }
-
-    init() {
+        // Always open in dark mode. Light mode is only used while the
+        // visitor has switched to it; it is not remembered for next time.
+        this.theme = 'dark';
+        this.icon = document.getElementById('themeIcon');
         this.setTheme(this.theme);
         document.getElementById('themeToggle').addEventListener('click', () => {
-            this.toggleTheme();
+            this.setTheme(this.theme === 'dark' ? 'light' : 'dark');
         });
     }
 
     setTheme(theme) {
         this.theme = theme;
         document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-
-        const icon = document.getElementById('themeIcon');
-        icon.textContent = theme === 'dark' ? '☀️' : '🌙';
-    }
-
-    toggleTheme() {
-        this.setTheme(this.theme === 'dark' ? 'light' : 'dark');
+        this.icon.textContent = theme === 'dark' ? '☀️' : '🌙';
     }
 }
 
+// ===== Animated particle background in the hero =====
+// Colours are picked per theme so the network glows on dark backgrounds
+// and stays soft on light ones. Particles also react to the mouse.
+const PARTICLE_THEMES = {
+    light: {
+        colors: ['#6366f1', '#8b5cf6', '#7c3aed'],
+        line: '99, 102, 241',
+        lineAlpha: 0.32,
+        glow: 0,
+        sizeScale: 1.3,
+        opacityBoost: 0.12
+    },
+    dark: {
+        colors: ['#a5b4fc', '#c4b5fd', '#67e8f9'],
+        line: '165, 180, 252',
+        lineAlpha: 0.28,
+        glow: 8,
+        sizeScale: 1,
+        opacityBoost: 0
+    }
+};
 
 class CanvasAnimation {
     constructor(canvas) {
@@ -39,438 +65,376 @@ class CanvasAnimation {
         this.ctx = canvas.getContext('2d');
         this.particles = [];
         this.animationId = null;
-        this.worker = null;
-        this.init();
+        this.mouse = { x: null, y: null };
+        this.linkDistance = 130;
+
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+
+        // The canvas is fixed behind the page, so mouse position = window position
+        window.addEventListener('mousemove', (e) => {
+            this.mouse.x = e.clientX;
+            this.mouse.y = e.clientY;
+        }, { passive: true });
+        document.addEventListener('mouseleave', () => {
+            this.mouse.x = null;
+            this.mouse.y = null;
+        });
+
+        this.start();
     }
 
-    init() {
-        this.resize();
-        this.createParticles();
-        this.setupWorker();
-        this.animate();
-
-        window.addEventListener('resize', () => this.resize());
+    get theme() {
+        return PARTICLE_THEMES[document.documentElement.getAttribute('data-theme')] || PARTICLE_THEMES.light;
     }
 
     resize() {
-        this.canvas.width = this.canvas.offsetWidth;
-        this.canvas.height = this.canvas.offsetHeight;
+        // Draw at the screen's real pixel density so dots stay crisp
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const oldWidth = this.width;
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.canvas.width = this.width * dpr;
+        this.canvas.height = this.height * dpr;
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        // Only re-scatter the dots when the width changes (phones change
+        // height while scrolling as the address bar hides and shows)
+        if (this.width !== oldWidth || this.particles.length === 0) this.createParticles();
+        if (!this.animationId) this.draw();
     }
 
     createParticles() {
-        const particleCount = Math.min(100, Math.floor(this.canvas.width / 10));
-        this.particles = [];
+        const count = Math.min(80, Math.max(30, Math.floor((this.width * this.height) / 16000)));
+        this.particles = Array.from({ length: count }, () => ({
+            x: Math.random() * this.width,
+            y: Math.random() * this.height,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            size: Math.random() * 2 + 1,
+            opacity: Math.random() * 0.5 + 0.4,
+            colorIndex: Math.floor(Math.random() * 3)
+        }));
+    }
 
-        for (let i = 0; i < particleCount; i++) {
-            this.particles.push({
-                x: Math.random() * this.canvas.width,
-                y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                size: Math.random() * 3 + 1,
-                opacity: Math.random() * 0.5 + 0.2
-            });
+    update() {
+        for (const p of this.particles) {
+            // Gently push particles away from the cursor
+            if (this.mouse.x !== null) {
+                const dx = p.x - this.mouse.x;
+                const dy = p.y - this.mouse.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist < 120 && dist > 0) {
+                    const force = (120 - dist) / 120 * 0.6;
+                    p.x += (dx / dist) * force;
+                    p.y += (dy / dist) * force;
+                }
+            }
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > this.width) p.vx *= -1;
+            if (p.y < 0 || p.y > this.height) p.vy *= -1;
+            p.x = Math.max(0, Math.min(this.width, p.x));
+            p.y = Math.max(0, Math.min(this.height, p.y));
         }
     }
 
-    setupWorker() {
-        const workerCode = `
-                    self.onmessage = function(e) {
-                        const { particles, width, height } = e.data;
-                        
-                        const updatedParticles = particles.map(particle => {
-                            particle.x += particle.vx;
-                            particle.y += particle.vy;
-                            
-                            if (particle.x < 0 || particle.x > width) particle.vx *= -1;
-                            if (particle.y < 0 || particle.y > height) particle.vy *= -1;
-                            
-                            particle.x = Math.max(0, Math.min(width, particle.x));
-                            particle.y = Math.max(0, Math.min(height, particle.y));
-                            
-                            return particle;
-                        });
-                        
-                        self.postMessage(updatedParticles);
-                    };
-                `;
+    draw() {
+        const { ctx } = this;
+        const theme = this.theme;
+        const max = this.linkDistance;
+        ctx.clearRect(0, 0, this.width, this.height);
 
-        const blob = new Blob([workerCode], { type: 'application/javascript' });
-        this.worker = new Worker(URL.createObjectURL(blob));
-
-        this.worker.onmessage = (e) => {
-            this.particles = e.data;
-        };
-    }
-
-    animate() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        if (this.worker) {
-            this.worker.postMessage({
-                particles: this.particles,
-                width: this.canvas.width,
-                height: this.canvas.height
-            });
-        }
-        this.ctx.fillStyle = getComputedStyle(document.documentElement)
-            .getPropertyValue('--primary-color');
-
-        this.particles.forEach(particle => {
-            this.ctx.globalAlpha = particle.opacity;
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-            this.ctx.fill();
-        });
-
-        this.ctx.globalAlpha = 0.1;
-        this.ctx.strokeStyle = getComputedStyle(document.documentElement)
-            .getPropertyValue('--primary-color');
-
+        // Lines: stronger when particles are closer
+        ctx.lineWidth = 1;
         for (let i = 0; i < this.particles.length; i++) {
+            const a = this.particles[i];
             for (let j = i + 1; j < this.particles.length; j++) {
-                const dx = this.particles[i].x - this.particles[j].x;
-                const dy = this.particles[i].y - this.particles[j].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < 100) {
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
-                    this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                    this.ctx.stroke();
+                const b = this.particles[j];
+                const dist = Math.hypot(a.x - b.x, a.y - b.y);
+                if (dist < max) {
+                    ctx.strokeStyle = `rgba(${theme.line}, ${(1 - dist / max) * theme.lineAlpha})`;
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.stroke();
+                }
+            }
+            // Link to the cursor
+            if (this.mouse.x !== null) {
+                const dist = Math.hypot(a.x - this.mouse.x, a.y - this.mouse.y);
+                if (dist < 180) {
+                    ctx.strokeStyle = `rgba(${theme.line}, ${(1 - dist / 180) * theme.lineAlpha * 2})`;
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(this.mouse.x, this.mouse.y);
+                    ctx.stroke();
                 }
             }
         }
 
-        this.ctx.globalAlpha = 1;
-        this.animationId = requestAnimationFrame(() => this.animate());
+        // Dots, with a soft glow in dark mode
+        ctx.shadowBlur = theme.glow;
+        for (const p of this.particles) {
+            const color = theme.colors[p.colorIndex];
+            ctx.shadowColor = color;
+            ctx.fillStyle = color;
+            ctx.globalAlpha = Math.min(1, p.opacity + theme.opacityBoost);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * theme.sizeScale, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
     }
 
-    destroy() {
-        if (this.animationId) {
-            cancelAnimationFrame(this.animationId);
+    loop() {
+        this.update();
+        this.draw();
+        this.animationId = requestAnimationFrame(() => this.loop());
+    }
+
+    start() {
+        if (prefersReducedMotion) {
+            this.draw(); // still picture, no movement
+            return;
         }
-        if (this.worker) {
-            this.worker.terminate();
-        }
+        if (!this.animationId) this.loop();
+    }
+
+    stop() {
+        if (this.animationId) cancelAnimationFrame(this.animationId);
+        this.animationId = null;
     }
 }
+
+// ===== Fade-in on scroll =====
 class ScrollAnimations {
     constructor() {
-        this.init();
-    }
+        const targets = document.querySelectorAll('.fade-in');
 
-    init() {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        if (!('IntersectionObserver' in window)) {
+            targets.forEach(el => el.classList.add('visible'));
+            return;
+        }
 
-        this.observer = new IntersectionObserver((entries) => {
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-        document.querySelectorAll('.fade-in').forEach(el => {
-            this.observer.observe(el);
-        });
-
-        document.querySelectorAll('.skill-category').forEach((el, index) => {
-            el.style.transitionDelay = `${index * 0.1}s`;
-            this.observer.observe(el);
-        });
-
-        document.querySelectorAll('.project-card').forEach((el, index) => {
-            el.style.transitionDelay = `${index * 0.2}s`;
-            this.observer.observe(el);
-        });
+        targets.forEach(el => observer.observe(el));
     }
 }
 
+// ===== Header, mobile menu, active link =====
 class Navigation {
     constructor() {
         this.header = document.getElementById('header');
         this.navLinks = document.querySelectorAll('.nav-link');
-        this.mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        this.navLinksContainer = document.getElementById('navLinks');
-        this.init();
-    }
+        this.menuBtn = document.getElementById('mobileMenuBtn');
+        this.menu = document.getElementById('navLinks');
+        this.sections = document.querySelectorAll('main section[id]');
 
-    init() {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 100) {
-                this.header.classList.add('scrolled');
-            } else {
-                this.header.classList.remove('scrolled');
-            }
+        window.addEventListener('scroll', () => this.onScroll(), { passive: true });
+        this.onScroll();
+
+        this.menuBtn.addEventListener('click', () => {
+            this.setMenu(!this.menu.classList.contains('active'));
         });
 
-        window.addEventListener('scroll', () => {
-            this.updateActiveLink();
+        // Close the mobile menu after picking a link
+        this.menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => this.setMenu(false));
         });
 
-        this.mobileMenuBtn.addEventListener('click', () => {
-            this.navLinksContainer.classList.toggle('active');
-        });
-
-        this.navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                this.navLinksContainer.classList.remove('active');
-            });
-        });
-
-        this.navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href').substring(1);
-                const targetElement = document.getElementById(targetId);
-
-                if (targetElement) {
-                    const headerHeight = this.header.offsetHeight;
-                    const targetPosition = targetElement.offsetTop - headerHeight;
-
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
+        // Close the mobile menu with Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.setMenu(false);
         });
     }
 
-    updateActiveLink() {
-        const sections = document.querySelectorAll('section[id]');
-        const scrollPosition = window.scrollY + 200;
+    setMenu(open) {
+        this.menu.classList.toggle('active', open);
+        this.header.classList.toggle('menu-open', open);
+        this.menuBtn.setAttribute('aria-expanded', String(open));
+        this.menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        this.menuBtn.textContent = open ? '✕' : '☰';
+    }
 
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            const sectionId = section.getAttribute('id');
+    onScroll() {
+        this.header.classList.toggle('scrolled', window.scrollY > 50);
 
-            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                this.navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${sectionId}`) {
-                        link.classList.add('active');
-                    }
-                });
-            }
+        const position = window.scrollY + 200;
+        let currentId = 'hero';
+        this.sections.forEach(section => {
+            if (position >= section.offsetTop) currentId = section.id;
+        });
+        // At the very bottom, highlight the last section
+        if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 5) {
+            currentId = this.sections[this.sections.length - 1].id;
+        }
+
+        this.navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${currentId}`);
         });
     }
 }
 
-class LocationService {
-    constructor() {
-        this.init();
-    }
-
-    init() {
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => this.handleLocationSuccess(position),
-                (error) => this.handleLocationError(error),
-                {
-                    timeout: 10000,
-                    enableHighAccuracy: false
-                }
-            );
-        } else {
-            this.handleLocationError(new Error('Geolocation not supported'));
-        }
-    }
-
-    async handleLocationSuccess(position) {
-        const { latitude, longitude } = position.coords;
-
-        try {
-            const response = await fetch(
-                `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-            );
-
-            if (response.ok) {
-                const data = await response.json();
-                const location = `${data.city || data.locality || 'Unknown'}, ${data.countryName || 'Unknown'}`;
-                document.getElementById('locationText').textContent = location;
-            } else {
-                throw new Error('Geocoding failed');
-            }
-        } catch (error) {
-            console.error('Geocoding error:', error);
-            document.getElementById('locationText').textContent = 'Location unavailable';
-        }
-    }
-
-    handleLocationError(error) {
-        console.error('Geolocation error:', error);
-        document.getElementById('locationText').textContent = 'Kathmandu , Nepal';
-    }
-}
-
+// ===== Contact form: really sends the message =====
 class ContactForm {
     constructor() {
         this.form = document.getElementById('contactForm');
-        this.init();
-    }
-
-    init() {
+        this.messageEl = document.getElementById('formMessage');
+        this.button = this.form.querySelector('button[type="submit"]');
         this.form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleSubmit();
         });
     }
 
+    validate() {
+        const { name, email, subject, message } = this.form.elements;
+        if (!name.value.trim()) return 'Please enter your name.';
+        if (!email.value.trim() || !email.checkValidity()) return 'Please enter a valid email address.';
+        if (!subject.value.trim()) return 'Please add a subject.';
+        if (message.value.trim().length < 10) return 'Please write a message (at least 10 characters).';
+        return null;
+    }
+
     async handleSubmit() {
-        const formData = new FormData(this.form);
-        const data = Object.fromEntries(formData);
+        const error = this.validate();
+        if (error) {
+            this.showMessage(error, 'error');
+            return;
+        }
 
-        const submitBtn = this.form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
+        const data = Object.fromEntries(new FormData(this.form));
+        if (data._honey) return; // a bot filled the hidden field
 
-        submitBtn.textContent = 'Sending...';
-        submitBtn.disabled = true;
+        const payload = {
+            name: data.name.trim(),
+            email: data.email.trim(),
+            message: data.message.trim(),
+            _subject: `Portfolio: ${data.subject.trim()}`,
+            _replyto: data.email.trim(),
+            _template: 'table',
+            _captcha: 'false'
+        };
+
+        const originalText = this.button.textContent;
+        this.button.textContent = 'Sending...';
+        this.button.disabled = true;
+        this.showMessage('', null);
 
         try {
-    
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            const response = await fetch(FORM_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json().catch(() => ({}));
 
-            this.showMessage('Message sent successfully! I\'ll get back to you soon.', 'success');
+            if (!response.ok || String(result.success) === 'false') {
+                throw new Error(result.message || 'Request failed');
+            }
+
+            this.showMessage("Thank you! Your message has been sent. I'll get back to you soon.", 'success');
             this.form.reset();
-        } catch (error) {
-            this.showMessage('Failed to send message. Please try again.', 'error');
+        } catch (err) {
+            console.error('Contact form error:', err);
+            this.showMessage(
+                `Sorry, the message couldn't be sent. Please email me directly at ${CONTACT_EMAIL}.`,
+                'error'
+            );
         } finally {
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
+            this.button.textContent = originalText;
+            this.button.disabled = false;
         }
     }
 
-    showMessage(message, type) {
-        const messageEl = document.createElement('div');
-        messageEl.className = `form-message ${type}`;
-        messageEl.textContent = message;
-        messageEl.style.cssText = `
-                    padding: 1rem;
-                    margin-top: 1rem;
-                    border-radius: 8px;
-                    font-weight: 500;
-                    background: ${type === 'success' ? '#d1fae5' : '#fee2e2'};
-                    color: ${type === 'success' ? '#065f46' : '#991b1b'};
-                    border: 1px solid ${type === 'success' ? '#a7f3d0' : '#fecaca'};
-                `;
-
-        this.form.appendChild(messageEl);
-
-        setTimeout(() => {
-            messageEl.remove();
-        }, 5000);
+    showMessage(text, type) {
+        this.messageEl.textContent = text;
+        this.messageEl.className = type ? `form-message ${type}` : 'form-message';
     }
 }
 
+// ===== Project filter buttons =====
+class ProjectFilter {
+    constructor() {
+        this.buttons = document.querySelectorAll('.filter-btn');
+        this.cards = document.querySelectorAll('.project-card');
+        this.buttons.forEach(btn => {
+            btn.addEventListener('click', () => this.apply(btn));
+        });
+    }
+
+    apply(activeBtn) {
+        const filter = activeBtn.dataset.filter;
+        this.buttons.forEach(btn => {
+            btn.classList.toggle('active', btn === activeBtn);
+            btn.setAttribute('aria-pressed', String(btn === activeBtn));
+        });
+        this.cards.forEach(card => {
+            const show = filter === 'all' || card.dataset.category === filter;
+            card.classList.toggle('hide', !show);
+        });
+    }
+}
+
+// ===== Back-to-top button =====
+class BackToTop {
+    constructor() {
+        const btn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            btn.classList.toggle('show', window.scrollY > 600);
+        }, { passive: true });
+        btn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        });
+    }
+}
+
+// ===== Loading screen =====
 class LoadingScreen {
     constructor() {
-        this.loadingEl = document.getElementById('loading');
-        this.init();
-    }
-
-    init() {
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                this.loadingEl.classList.add('hidden');
-            }, 1000);
-        });
+        const el = document.getElementById('loading');
+        const hide = () => el.classList.add('hidden');
+        if (document.readyState === 'complete') {
+            setTimeout(hide, 200);
+        } else {
+            window.addEventListener('load', () => setTimeout(hide, 200));
+        }
+        // Never leave visitors stuck behind the spinner
+        setTimeout(hide, 3000);
     }
 }
 
-class ContainerQueries {
-    constructor() {
-        this.init();
-    }
+// ===== Start everything =====
+new LoadingScreen();
+new ThemeManager();
+new Navigation();
+new ScrollAnimations();
+new ContactForm();
+new ProjectFilter();
+new BackToTop();
 
-    init() {
-        if (!CSS.supports('container-type: inline-size')) {
-            this.polyfill();
-        }
-    }
+document.getElementById('year').textContent = new Date().getFullYear();
 
-    polyfill() {
-        const containers = document.querySelectorAll('.projects-grid');
+const bgCanvas = document.getElementById('bgCanvas');
+const canvasAnimation = bgCanvas ? new CanvasAnimation(bgCanvas) : null;
 
-        const observer = new ResizeObserver(entries => {
-            entries.forEach(entry => {
-                const width = entry.contentRect.width;
-                if (width < 600) {
-                    entry.target.style.gridTemplateColumns = '1fr';
-                } else {
-                    entry.target.style.gridTemplateColumns = 'repeat(auto-fit, minmax(350px, 1fr))';
-                }
-            });
-        });
+// Redraw the particles in the new theme's colours (needed when motion is reduced)
+document.getElementById('themeToggle').addEventListener('click', () => {
+    if (canvasAnimation && !canvasAnimation.animationId) canvasAnimation.draw();
+});
 
-        containers.forEach(container => {
-            observer.observe(container);
-        });
-    }
-}
-
-class PerformanceMonitor {
-    constructor() {
-        this.init();
-    }
-
-    init() {
-        if ('performance' in window) {
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    const perfData = performance.getEntriesByType('navigation')[0];
-                    console.log('Page Load Time:', perfData.loadEventEnd - perfData.fetchStart, 'ms');
-                }, 0);
-            });
-        }
-    }
-}
-
-class App {
-    constructor() {
-        this.components = [];
-        this.init();
-    }
-
-    init() {
-        this.components.push(new LoadingScreen());
-        this.components.push(new ThemeManager());
-        this.components.push(new Navigation());
-        this.components.push(new ScrollAnimations());
-        this.components.push(new LocationService());
-        this.components.push(new ContactForm());
-        this.components.push(new ContainerQueries());
-        this.components.push(new PerformanceMonitor());
-
-        const heroCanvas = document.getElementById('heroCanvas');
-        if (heroCanvas) {
-            this.canvasAnimation = new CanvasAnimation(heroCanvas);
-        }
-    }
-
-    destroy() {
-        if (this.canvasAnimation) {
-            this.canvasAnimation.destroy();
-        }
-    }
-}
-
-const app = new App();
-
+// Pause the animation while the tab is hidden, resume when visible again
 document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        if (app.canvasAnimation) {
-            app.canvasAnimation.destroy();
-        }
-    } else {
-        const heroCanvas = document.getElementById('heroCanvas');
-        if (heroCanvas && !app.canvasAnimation) {
-            app.canvasAnimation = new CanvasAnimation(heroCanvas);
-        }
-    }
+    if (!canvasAnimation) return;
+    if (document.hidden) canvasAnimation.stop();
+    else canvasAnimation.start();
 });

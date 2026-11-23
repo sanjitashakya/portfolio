@@ -1,9 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sanjita's Portfolio</title>
+    <title>Sanjita Shakya | Developer &amp; Digital Operations</title>
+    <meta
+      name="description"
+      content="Sanjita Shakya, BCA graduate from Bhaktapur, Nepal. Web developer with experience in project coordination and digital operations. Currently Website &amp; Digital Operations Coordinator at Nepal Connect."
+    />
+    <meta property="og:title" content="Sanjita Shakya | Developer &amp; Digital Operations" />
+    <meta
+      property="og:description"
+      content="Web developer with experience in project coordination and digital operations."
+    />
+    <meta property="og:image" content="mypic.jpg" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%236366f1'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>S</text></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -11,125 +31,571 @@
       <div class="spinner"></div>
     </div>
 
-    <div class="site-container">
-      <header class="header" id="header">
-        <nav class="nav">
-          <a href="#" class="logo">Sanjita</a>
-          <ul class="nav-links" id="navLinks">
-            <li><a href="#hero" class="nav-link active">Home</a></li>
-            <li><a href="#about" class="nav-link">About</a></li>
-            <li><a href="#skills" class="nav-link">Skills</a></li>
-            <li><a href="#projects" class="nav-link">Projects</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
-            <li>
-              <button class="theme-toggle" id="themeToggle">
-                <span id="themeIcon">🌙</span>
-              </button>
-            </li>
-          </ul>
-          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
-        </nav>
-      </header>
+    <!-- Connected-dots background that runs behind the whole page -->
+    <canvas class="bg-canvas" id="bgCanvas" aria-hidden="true"></canvas>
+
+    <header class="header" id="header">
+      <nav class="nav">
+        <a href="#hero" class="logo">Sanjita Shakya<span>.</span></a>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#hero" class="nav-link active">Home</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#experience" class="nav-link">Experience</a></li>
+          <li><a href="#projects" class="nav-link">Projects</a></li>
+          <li><a href="#skills" class="nav-link">Skills</a></li>
+          <li><a href="#education" class="nav-link">Education</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+          <li>
+            <button
+              class="theme-toggle"
+              id="themeToggle"
+              aria-label="Switch between light and dark mode"
+            >
+              <span id="themeIcon">🌙</span>
+            </button>
+          </li>
+        </ul>
+        <button
+          class="mobile-menu-btn"
+          id="mobileMenuBtn"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="navLinks"
+        >
+          ☰
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <div class="page-glow glow-h1" aria-hidden="true"></div>
+      <div class="page-glow glow-h2" aria-hidden="true"></div>
+      <div class="page-glow glow-h3" aria-hidden="true"></div>
+      <div class="page-glow glow-1" aria-hidden="true"></div>
+      <div class="page-glow glow-2" aria-hidden="true"></div>
+      <div class="page-glow glow-3" aria-hidden="true"></div>
+      <div class="page-glow glow-4" aria-hidden="true"></div>
+      <div class="page-glow glow-5" aria-hidden="true"></div>
+      <div class="page-glow glow-6" aria-hidden="true"></div>
+      <!-- ===== HERO ===== -->
       <section class="hero" id="hero">
-        <canvas class="hero-canvas" id="heroCanvas"></canvas>
         <div class="hero-content">
+          <span class="hero-badge"><span class="pulse"></span> Open to developer &amp; project coordination roles</span>
           <h1 class="hero-title">Sanjita Shakya</h1>
+          <p class="hero-roles">
+            <span>Web Developer</span>
+            <span class="role-sep" aria-hidden="true"></span>
+            <span>Project Coordinator</span>
+            <span class="role-sep" aria-hidden="true"></span>
+            <span>Digital Operations</span>
+          </p>
           <p class="hero-subtitle">
-            Aspiring Software Developer & UI/UX Enthusiast
+            I build web apps with React, Next.js and Django, and keep the
+            projects, teams and websites behind them running smoothly.
           </p>
           <div class="hero-cta">
-            <a href="#projects" class="btn btn-primary">View My Work</a>
-            <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+            <a href="#projects" class="btn btn-primary">View My Work →</a>
+            <a href="Sanjita_Shakya_CV.pdf" class="btn btn-secondary" download>Download CV ↓</a>
+          </div>
+          <div class="hero-socials">
+            <a href="https://github.com/sanjitashakya" target="_blank" rel="noopener">GitHub</a>
+            <span aria-hidden="true">•</span>
+            <a href="https://www.linkedin.com/in/sanjita-shakya-b999a12ab/" target="_blank" rel="noopener">LinkedIn</a>
+            <span aria-hidden="true">•</span>
+            <a href="mailto:sanjitashakya1@gmail.com">Email</a>
           </div>
         </div>
+        <a href="#about" class="scroll-hint" aria-label="Scroll to About section"></a>
       </section>
 
-      <section class="about section" id="about">
-        <div class="fade-in">
+      <!-- ===== ABOUT ===== -->
+      <section class="section section-alt" id="about">
+        <div class="container fade-in">
+          <p class="section-eyebrow">Get to know me</p>
           <h2 class="section-title">About Me</h2>
           <div class="about-content">
             <div class="about-image">
-              <div class="about-image">
-                <img src="mypic.jpg" alt="About Image" />
-              </div>
+              <img src="mypic.jpg" alt="Portrait of Sanjita Shakya" />
             </div>
             <div class="about-text">
               <p>
-                Hi! I'm Sanjita, a motivated and enthusiastic learner on my
-                journey to become a skilled software developer. I’m passionate
-                about building clean, user-friendly web applications and
-                constantly learning new technologies.
+                Hi! I'm Sanjita, a <strong>Bachelor in Computer Applications (BCA)</strong>
+                graduate from Bhaktapur who enjoys both sides of tech work:
+                <strong>building</strong> the product and <strong>managing</strong>
+                the work that gets it delivered.
               </p>
               <p>
-                I enjoy solving problems through code and creating experiences
-                that are both functional and beautiful. I’m especially
-                interested in frontend development, design systems, and user
-                experience.
+                On the development side, I build web apps with React, Next.js,
+                Django and PHP. On the management side, I've run Agile sprints
+                with Jira and Asana at Cloco, led a small Scrum team on the
+                Splitfair app, and coordinated daily operations, staff and
+                reporting across multiple outlets at Jammy's.
               </p>
               <p>
-                I'm currently seeking opportunities to grow, collaborate, and
-                contribute to impactful projects that make a difference.
+                Today I bring the two together as Website &amp; Digital
+                Operations Coordinator at <strong>Nepal Connect</strong>, where
+                I manage the website, audit and improve it, and coordinate
+                content and digital initiatives.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <section class="skills section" id="skills">
-        <div class="fade-in">
-          <h2 class="section-title">Skills & Technologies</h2>
-          <div class="skills-container">
-            <div class="skill-category">
-              <h3>Frontend</h3>
-              <div class="skill-list">
-                <span class="skill-tag">JavaScript</span>
-                <span class="skill-tag">React</span>
-                <span class="skill-tag">HTML5</span>
-                <span class="skill-tag">CSS3</span>
-                <span class="skill-tag">Tailwind CSS</span>
-                <span class="skill-tag">UI/UX</span>
-                <span class="skill-tag">Next.js</span>
-              </div>
-            </div>
-            <div class="skill-category">
-              <h3>Backend</h3>
-              <div class="skill-list">
-                <span class="skill-tag">Python</span>
-                <span class="skill-tag">Django</span>
-              </div>
-            </div>
-            <div class="skill-category">
-              <h3>Tools</h3>
-              <div class="skill-list">
-                <span class="skill-tag">Git</span>
-                <span class="skill-tag">Figma</span>
-                <span class="skill-tag">Linux</span>
-                <span class="skill-tag">Balsamiq</span>
+              <div class="stats">
+                <div class="stat">
+                  <span class="stat-number">5</span>
+                  <span class="stat-label">Roles across tech &amp; operations</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-number">6+</span>
+                  <span class="stat-label">Projects built &amp; led</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-number">4</span>
+                  <span class="stat-label">Languages spoken</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="projects section" id="projects">
-        <div class="fade-in">
-          <h2 class="section-title">Featured Project</h2>
+      <!-- ===== EXPERIENCE ===== -->
+      <section class="section" id="experience">
+        <div class="container fade-in">
+          <p class="section-eyebrow">Where I've worked</p>
+          <h2 class="section-title">Experience</h2>
+          <div class="timeline">
+            <article class="timeline-item">
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <div class="timeline-card">
+                <div class="timeline-header">
+                  <div>
+                    <h3>Website &amp; Digital Operations Coordinator</h3>
+                    <span class="timeline-org">Nepal Connect</span>
+                  </div>
+                  <span class="timeline-date current">Sep 2026 – Present</span>
+                </div>
+                <ul class="timeline-points">
+                  <li>Manage website content, updates and overall digital operations.</li>
+                  <li>Monitor website performance, identify issues and coordinate improvements.</li>
+                  <li>Conduct website audits to improve functionality, design and user experience.</li>
+                  <li>Assist with website development, technical updates and hosting-related tasks.</li>
+                  <li>Coordinate content management, social media planning and digital outreach.</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <div class="timeline-card">
+                <div class="timeline-header">
+                  <div>
+                    <h3>Operations &amp; Sales Coordinator</h3>
+                    <span class="timeline-org">Jammy's</span>
+                  </div>
+                  <span class="timeline-date">Apr 2026 – Sep 2026</span>
+                </div>
+                <ul class="timeline-points">
+                  <li>Coordinated daily operations across multiple kiosk outlets.</li>
+                  <li>Managed staff scheduling, training and onboarding across locations.</li>
+                  <li>Prepared operational reports and sales analyses for management.</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <div class="timeline-card">
+                <div class="timeline-header">
+                  <div>
+                    <h3>Software Developer Fellow</h3>
+                    <span class="timeline-org">Cloco Inc</span>
+                  </div>
+                  <span class="timeline-date">Jun 2025 – Aug 2025</span>
+                </div>
+                <ul class="timeline-points">
+                  <li>Collaborated with developers in Agile sprints to deliver project features on schedule.</li>
+                  <li>Managed sprint tasks, timelines and documentation using Jira and Asana.</li>
+                  <li>Took part in sprint planning, daily stand-ups and cross-functional coordination.</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <div class="timeline-card">
+                <div class="timeline-header">
+                  <div>
+                    <h3>UI/UX Intern</h3>
+                    <span class="timeline-org">Almonds AI</span>
+                  </div>
+                  <span class="timeline-date">Feb 2025 – Jun 2025</span>
+                </div>
+                <ul class="timeline-points">
+                  <li>Designed and tested user-friendly interfaces aligned with project timelines.</li>
+                  <li>Worked in daily stand-ups and sprint planning under the Scrum framework.</li>
+                  <li>Coordinated with developers and project leads to deliver on-time solutions.</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <div class="timeline-card">
+                <div class="timeline-header">
+                  <div>
+                    <h3>Sales Representative</h3>
+                    <span class="timeline-org">Ratnayan Jyasa</span>
+                  </div>
+                  <span class="timeline-date">Dec 2023 – Jan 2025</span>
+                </div>
+                <ul class="timeline-points">
+                  <li>Managed sales targets and campaigns by coordinating team activities.</li>
+                  <li>Improved productivity by planning and tracking weekly team performance.</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PROJECTS ===== -->
+      <section class="section section-alt" id="projects">
+        <div class="container fade-in">
+          <p class="section-eyebrow">Things I've built</p>
+          <h2 class="section-title">Projects</h2>
+
+          <div class="filters" role="group" aria-label="Filter projects">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="web">Web Apps</button>
+            <button class="filter-btn" data-filter="design">UI/UX</button>
+            <button class="filter-btn" data-filter="data">Data &amp; ML</button>
+          </div>
+
           <div class="projects-grid">
-            <div class="project-card">
-              <div class="project-image">🚀</div>
+            <article class="project-card" data-category="web">
+              <div class="project-image grad-1">
+                <span class="project-icon">💸</span>
+                <span class="project-badge">Team project</span>
+              </div>
               <div class="project-content">
-                <h3 class="project-title">E-Commerce Platform</h3>
+                <h3 class="project-title">Splitfair</h3>
+                <p class="project-subtitle">Bill Splitter App</p>
                 <p class="project-description">
-                  A simple e-commerce website with cart functionality, product
-                  listings, and responsive design.
+                  A full-stack app for splitting shared expenses between
+                  friends. I led a small team using Scrum, tracked deliverables
+                  in Asana, and the app has a Next.js frontend with a Django REST
+                  backend.
+                </p>
+                <div class="project-tech">
+                  <span class="tech-tag">Next.js</span>
+                  <span class="tech-tag">TypeScript</span>
+                  <span class="tech-tag">Tailwind</span>
+                  <span class="tech-tag">Django REST</span>
+                </div>
+                <div class="project-links">
+                  <a href="https://github.com/sanjitashakya/Splitfair-BillSplitterApp" class="project-link" target="_blank" rel="noopener">GitHub →</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="web">
+              <div class="project-image grad-2">
+                <span class="project-icon">🏔️</span>
+              </div>
+              <div class="project-content">
+                <h3 class="project-title">Neptours</h3>
+                <p class="project-subtitle">Tour Booking Website</p>
+                <p class="project-description">
+                  A tour booking website where users browse travel packages and
+                  book trips, with an admin panel to manage packages, bookings,
+                  users and booking status.
+                </p>
+                <div class="project-tech">
+                  <span class="tech-tag">PHP</span>
+                  <span class="tech-tag">MySQL</span>
+                  <span class="tech-tag">HTML/CSS</span>
+                </div>
+                <div class="project-links">
+                  <a href="https://github.com/sanjitashakya/Neptours" class="project-link" target="_blank" rel="noopener">GitHub →</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="design">
+              <div class="project-image grad-3">
+                <span class="project-icon">🗺️</span>
+              </div>
+              <div class="project-content">
+                <h3 class="project-title">Money Map</h3>
+                <p class="project-subtitle">Personal Expense Tracker App</p>
+                <p class="project-description">
+                  Designed the user workflows and interface for an expense
+                  tracking app in Figma, and documented its features.
+                </p>
+                <div class="project-tech">
+                  <span class="tech-tag">Figma</span>
+                  <span class="tech-tag">UI/UX</span>
+                  <span class="tech-tag">Documentation</span>
+                </div>
+                <div class="project-links">
+                  <a href="https://www.figma.com/design/WXTBC3IWSsJEXQPPU8BGpF/New-Money-Map?node-id=1-2" class="project-link" target="_blank" rel="noopener">View in Figma ↗</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="data">
+              <div class="project-image grad-4">
+                <span class="project-icon">🩺</span>
+              </div>
+              <div class="project-content">
+                <h3 class="project-title">Breast Cancer Classifier</h3>
+                <p class="project-subtitle">Machine Learning Web App</p>
+                <p class="project-description">
+                  Trains and compares Random Forest, Decision Tree and Naive
+                  Bayes models on the Wisconsin Diagnostic dataset, with a
+                  Streamlit app for making predictions.
+                </p>
+                <div class="project-tech">
+                  <span class="tech-tag">Python</span>
+                  <span class="tech-tag">scikit-learn</span>
+                  <span class="tech-tag">Streamlit</span>
+                </div>
+                <div class="project-links">
+                  <a href="https://github.com/sanjitashakya/Breast_Cancer_Detection" class="project-link" target="_blank" rel="noopener">GitHub →</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="web">
+              <div class="project-image grad-5">
+                <span class="project-icon">🌤️</span>
+              </div>
+              <div class="project-content">
+                <h3 class="project-title">Weather App</h3>
+                <p class="project-subtitle">React Weather Application</p>
+                <p class="project-description">
+                  Pick from the world's top cities and see current weather
+                  conditions, powered by the AccuWeather API.
                 </p>
                 <div class="project-tech">
                   <span class="tech-tag">React</span>
-                  <span class="tech-tag">Node.js</span>
-                  <span class="tech-tag">MongoDB</span>
+                  <span class="tech-tag">Vite</span>
+                  <span class="tech-tag">REST API</span>
                 </div>
                 <div class="project-links">
-                  <a href="#" class="project-link">GitHub →</a>
+                  <a href="https://github.com/sanjitashakya/Simple-Weather-Application" class="project-link" target="_blank" rel="noopener">GitHub →</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="web">
+              <div class="project-image grad-6">
+                <span class="project-icon">😊</span>
+              </div>
+              <div class="project-content">
+                <h3 class="project-title">Click Mood</h3>
+                <p class="project-subtitle">React Mood App</p>
+                <p class="project-description">
+                  A playful React app where you pick how you feel and the page
+                  responds, built to practise components, props and state.
+                </p>
+                <div class="project-tech">
+                  <span class="tech-tag">React</span>
+                  <span class="tech-tag">Vite</span>
+                </div>
+                <div class="project-links">
+                  <a href="https://github.com/sanjitashakya/Click_Mood" class="project-link" target="_blank" rel="noopener">GitHub →</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="web">
+              <div class="project-image grad-1">
+                <span class="project-icon">💼</span>
+                <span class="project-badge live">Live</span>
+              </div>
+              <div class="project-content">
+                <h3 class="project-title">Personal Portfolio</h3>
+                <p class="project-subtitle">This website</p>
+                <p class="project-description">
+                  Built from scratch with vanilla JavaScript: light/dark theme,
+                  animated canvas background, project filters and a working
+                  contact form.
+                </p>
+                <div class="project-tech">
+                  <span class="tech-tag">HTML</span>
+                  <span class="tech-tag">CSS</span>
+                  <span class="tech-tag">JavaScript</span>
+                </div>
+                <div class="project-links">
+                  <a href="https://portfolio-pied-phi-65.vercel.app" class="project-link" target="_blank" rel="noopener">Live site ↗</a>
+                  <a href="https://github.com/sanjitashakya/portfolio" class="project-link" target="_blank" rel="noopener">GitHub →</a>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <p class="more-link">
+            More on <a href="https://github.com/sanjitashakya" target="_blank" rel="noopener">my GitHub →</a>
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== SKILLS ===== -->
+      <section class="section" id="skills">
+        <div class="container fade-in">
+          <p class="section-eyebrow">What I work with</p>
+          <h2 class="section-title">Skills &amp; Tools</h2>
+          <div class="skills-container">
+            <div class="skill-category">
+              <h3><span>🎨</span> Web &amp; Frontend</h3>
+              <div class="skill-list">
+                <span class="skill-tag">HTML</span>
+                <span class="skill-tag">CSS</span>
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">React</span>
+                <span class="skill-tag">Next.js</span>
+                <span class="skill-tag">Tailwind CSS</span>
+                <span class="skill-tag">Bootstrap</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <h3><span>⚙️</span> Programming &amp; Backend</h3>
+              <div class="skill-list">
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">Django</span>
+                <span class="skill-tag">Java</span>
+                <span class="skill-tag">C#</span>
+                <span class="skill-tag">PHP</span>
+                <span class="skill-tag">SQL</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <h3><span>📋</span> Project &amp; Operations Management</h3>
+              <div class="skill-list">
+                <span class="skill-tag">Agile / Scrum</span>
+                <span class="skill-tag">Sprint Planning</span>
+                <span class="skill-tag">Jira</span>
+                <span class="skill-tag">Asana</span>
+                <span class="skill-tag">Team Coordination</span>
+                <span class="skill-tag">Staff Scheduling &amp; Training</span>
+                <span class="skill-tag">Reporting &amp; Analysis</span>
+                <span class="skill-tag">Task Prioritization</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <h3><span>🗄️</span> Databases</h3>
+              <div class="skill-list">
+                <span class="skill-tag">PostgreSQL</span>
+                <span class="skill-tag">MySQL</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <h3><span>🛠️</span> Design &amp; Tools</h3>
+              <div class="skill-list">
+                <span class="skill-tag">Figma</span>
+                <span class="skill-tag">Git</span>
+                <span class="skill-tag">GitHub</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <h3><span>✍️</span> Communication</h3>
+              <div class="skill-list">
+                <span class="skill-tag">Documentation</span>
+                <span class="skill-tag">Content Writing</span>
+                <span class="skill-tag">Research</span>
+                <span class="skill-tag">Team Collaboration</span>
+                <span class="skill-tag">Problem Solving</span>
+                <span class="skill-tag">Time Management</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== EDUCATION ===== -->
+      <section class="section section-alt" id="education">
+        <div class="container fade-in">
+          <p class="section-eyebrow">Learning journey</p>
+          <h2 class="section-title">Education &amp; Certifications</h2>
+
+          <div class="learning-grid">
+            <!-- Left: education timeline -->
+            <div class="learning-col">
+              <h3 class="col-title"><span class="col-icon">🎓</span> Education</h3>
+              <ol class="edu-timeline">
+                <li class="edu-item featured">
+                  <span class="edu-year">2021 – 2026</span>
+                  <h4>Bachelor in Computer Applications (BCA)</h4>
+                  <p class="edu-place">Bhaktapur Multiple Campus</p>
+                  <p class="edu-board">Tribhuvan University</p>
+                  <div class="edu-tags">
+                    <span>Programming</span>
+                    <span>Web Development</span>
+                    <span>Databases</span>
+                    <span>Software Engineering</span>
+                  </div>
+                </li>
+                <li class="edu-item">
+                  <span class="edu-year">2019 – 2021</span>
+                  <h4>+2 Humanities</h4>
+                  <p class="edu-place">Shree Padma Secondary School</p>
+                  <p class="edu-board">National Examinations Board (NEB)</p>
+                </li>
+                <li class="edu-item">
+                  <span class="edu-year">2018</span>
+                  <h4>Secondary Education Examination (SEE)</h4>
+                  <p class="edu-place">Shree Padma Secondary School</p>
+                </li>
+              </ol>
+            </div>
+
+            <!-- Right: certifications, training, languages -->
+            <div class="learning-col">
+              <h3 class="col-title"><span class="col-icon">🏅</span> Certifications &amp; Training</h3>
+              <div class="cert-list">
+                <div class="cert-card">
+                  <div class="cert-logo grad-2">🐍</div>
+                  <div class="cert-body">
+                    <h4>Django for Web Development</h4>
+                    <p>Udemy</p>
+                  </div>
+                  <span class="cert-type">Certificate</span>
+                </div>
+                <div class="cert-card">
+                  <div class="cert-logo grad-1">💻</div>
+                  <div class="cert-body">
+                    <h4>Python Programming</h4>
+                    <p>College-organized bootcamp</p>
+                  </div>
+                  <span class="cert-type">Certificate</span>
+                </div>
+                <div class="cert-card">
+                  <div class="cert-logo grad-3">🍣</div>
+                  <div class="cert-body">
+                    <h4>Sushi Making Training</h4>
+                    <p>Hands-on culinary training</p>
+                  </div>
+                  <span class="cert-type training">Training</span>
+                </div>
+              </div>
+
+              <h3 class="col-title"><span class="col-icon">🌐</span> Languages</h3>
+              <div class="lang-list">
+                <div class="lang">
+                  <div class="lang-head"><span>Nepali</span><span>Fluent</span></div>
+                  <div class="lang-bar"><span style="width: 100%"></span></div>
+                </div>
+                <div class="lang">
+                  <div class="lang-head"><span>Nepal Bhasa</span><span>Fluent</span></div>
+                  <div class="lang-bar"><span style="width: 100%"></span></div>
+                </div>
+                <div class="lang">
+                  <div class="lang-head"><span>English</span><span>Fluent</span></div>
+                  <div class="lang-bar"><span style="width: 90%"></span></div>
+                </div>
+                <div class="lang">
+                  <div class="lang-head"><span>French</span><span>Basic</span></div>
+                  <div class="lang-bar"><span style="width: 30%"></span></div>
                 </div>
               </div>
             </div>
@@ -137,77 +603,95 @@
         </div>
       </section>
 
-      <section class="contact section" id="contact">
-        <div class="fade-in">
+      <!-- ===== CONTACT ===== -->
+      <section class="section" id="contact">
+        <div class="container fade-in">
+          <p class="section-eyebrow">Let's talk</p>
           <h2 class="section-title">Get In Touch</h2>
+          <p class="section-intro">
+            Have an opportunity, a project or just want to say hi? Send me a
+            message and I'll get back to you.
+          </p>
           <div class="contact-content">
             <div class="contact-info">
-              <div class="contact-item">
+              <a class="contact-item" href="mailto:sanjitashakya1@gmail.com">
                 <div class="contact-icon">📧</div>
                 <div>
                   <h4>Email</h4>
-                  <a href="mailto:sanjitashakya1@gmail.com" style="text-decoration: none;">sanjitashakya1@gmailcom</a>
+                  <p>sanjitashakya1@gmail.com</p>
                 </div>
-              </div>
-              <div class="contact-item">
+              </a>
+              <a class="contact-item" href="tel:+9779863687370">
                 <div class="contact-icon">📱</div>
                 <div>
                   <h4>Phone</h4>
-                  <p>+977-9863687370</p>
+                  <p>+977 986-3687370</p>
                 </div>
-              </div>
-              <div class="contact-item" id="locationItem">
+              </a>
+              <div class="contact-item">
                 <div class="contact-icon">📍</div>
                 <div>
                   <h4>Location</h4>
-                  <p id="locationText">Loading location...</p>
+                  <p>Bhaktapur, Nepal</p>
                 </div>
               </div>
-              <div class="contact-item">
+              <a class="contact-item" href="https://www.linkedin.com/in/sanjita-shakya-b999a12ab/" target="_blank" rel="noopener">
                 <div class="contact-icon">💼</div>
                 <div>
                   <h4>LinkedIn</h4>
-                  <a href="https://www.linkedin.com/in/sanjita-shakya-b999a12ab/"class="email">Sanjita</a>
+                  <p>linkedin.com/in/sanjita-shakya</p>
                 </div>
-              </div>
+              </a>
+              <a class="contact-item" href="https://github.com/sanjitashakya" target="_blank" rel="noopener">
+                <div class="contact-icon">🐙</div>
+                <div>
+                  <h4>GitHub</h4>
+                  <p>github.com/sanjitashakya</p>
+                </div>
+              </a>
             </div>
-            <form class="contact-form" id="contactForm">
-              <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" required />
-              </div>
-              <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required />
+
+            <form class="contact-form" id="contactForm" novalidate>
+              <!-- Spam trap: real visitors never see or fill this -->
+              <input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" id="name" name="name" autocomplete="name" placeholder="Your name" required />
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required />
+                </div>
               </div>
               <div class="form-group">
                 <label for="subject">Subject</label>
-                <input type="text" id="subject" name="subject" required />
+                <input type="text" id="subject" name="subject" placeholder="What's this about?" required />
               </div>
               <div class="form-group">
                 <label for="message">Message</label>
-                <textarea id="message" name="message" required></textarea>
+                <textarea id="message" name="message" placeholder="Write your message..." required></textarea>
               </div>
-              <button type="submit" class="btn btn-primary">
-                Send Message
-              </button>
+              <button type="submit" class="btn btn-primary">Send Message</button>
+              <div class="form-message" id="formMessage" role="status" aria-live="polite"></div>
             </form>
           </div>
         </div>
       </section>
+    </main>
 
-      <footer class="footer">
-        <div class="footer-content">
-          <div class="social-links">
-            <a href="#" class="social-link">💼</a>
-            <a href="#" class="social-link">🐙</a>
-            <a href="#" class="social-link">🐦</a>
-            <a href="mailto:sanjitashakya1@gmail.com" class="social-link">📧</a>
-          </div>
-          <p>&copy; 2025 Sanjita Shakya. All rights reserved.</p>
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/sanjita-shakya-b999a12ab/" class="social-link" target="_blank" rel="noopener" aria-label="LinkedIn">💼</a>
+          <a href="https://github.com/sanjitashakya" class="social-link" target="_blank" rel="noopener" aria-label="GitHub">🐙</a>
+          <a href="mailto:sanjitashakya1@gmail.com" class="social-link" aria-label="Email">📧</a>
         </div>
-      </footer>
-    </div>
+        <p>&copy; <span id="year">2026</span> Sanjita Shakya. Designed &amp; built by me.</p>
+      </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
 
     <script src="script.js"></script>
   </body>
